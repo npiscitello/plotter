@@ -1,3 +1,4 @@
+package depreciated;
 /*// calculations break down sometimes, probably due to floating point calculation errors...
 package plotter;
 

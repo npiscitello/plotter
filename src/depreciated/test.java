@@ -1,4 +1,4 @@
-package plotter;
+package depreciated;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
