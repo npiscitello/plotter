@@ -84,7 +84,7 @@ public class Backend {
 	private static double max(double[] input) {
 		double max = input[0];
 		for(int i = 1; i < input.length; i++) {
-			if(input[i] > input[i-1] || input[i-1] != input[i-1]) {
+			if(input[i] > max || input[i-1] != input[i-1]) {
 				max = input[i];
 			}
 		}
