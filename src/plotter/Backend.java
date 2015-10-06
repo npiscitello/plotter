@@ -11,6 +11,8 @@ public class Backend {
 	
 	public static void main(String[] args) {
 		MainWindow.setVisible(true);
+		MainWindow.updateStatus(true, "Application Launch Successful!");
+		MainWindow.updateOutData(new double[6]);
 	}
 	
 		// plot the function

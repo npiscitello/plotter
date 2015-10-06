@@ -30,7 +30,7 @@ public class GUI extends JFrame implements ActionListener {
 	private JLabel mty = new JLabel();
 	private ImageIcon checkmark = new ImageIcon(getClass().getResource("checkmark-icon.png"));
 	private ImageIcon xmark = new ImageIcon(getClass().getResource("x-icon.png"));
-	private JLabel status = new JLabel("application launch successful", checkmark, JLabel.LEADING);
+	private JLabel status = new JLabel();
 	
 		// plot panel
 	private Plot2DPanel plotwindow = new Plot2DPanel();
