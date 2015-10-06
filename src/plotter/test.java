@@ -7,10 +7,7 @@ public class test
 {
 	static double maxzero = 0.003942697635;
 	public static void main(String[] args) {
-		double magnitude = Math.pow(10, Math.floor(Math.log10(maxzero)));
-		double interval = magnitude/100;
-		double max = magnitude*(round(maxzero/magnitude, 2, RoundingMode.UP));
-		System.out.println(maxzero); System.out.println(max); System.out.println(interval);
+		System.out.println(1 > Math.sqrt(-1));
 	}
 	
 		// custom rounding

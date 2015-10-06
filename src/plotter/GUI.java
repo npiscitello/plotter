@@ -23,11 +23,9 @@ public class GUI extends JFrame implements ActionListener {
 	private JTextField vy = new JTextField(4);
 	private JTextField py = new JTextField(4);
 	private JLabel zx = new JLabel();
-	private JLabel ztx = new JLabel();
 	private JLabel mx = new JLabel();
 	private JLabel mtx = new JLabel();
 	private JLabel zy = new JLabel();
-	private JLabel zty = new JLabel();
 	private JLabel my = new JLabel();
 	private JLabel mty = new JLabel();
 	private ImageIcon checkmark = new ImageIcon(getClass().getResource("checkmark-icon.png"));
@@ -69,19 +67,16 @@ public class GUI extends JFrame implements ActionListener {
 		GridBagConstraints noutputs_const = new GridBagConstraints();
 		noutputs_const.gridy=0; noutputs_const.insets = pad;
 		noutputs_const.gridx=1; noutputs.add(new JLabel("Zero"), noutputs_const);
-		noutputs_const.gridx=2; noutputs.add(new JLabel("Zero t"), noutputs_const);
-		noutputs_const.gridx=3; noutputs.add(new JLabel("Max"), noutputs_const);
-		noutputs_const.gridx=4; noutputs.add(new JLabel("Max t"), noutputs_const);
+		noutputs_const.gridx=2; noutputs.add(new JLabel("Max"), noutputs_const);
+		noutputs_const.gridx=3; noutputs.add(new JLabel("Max t"), noutputs_const);
 		noutputs_const.gridx=0; noutputs_const.gridy=1; noutputs.add(new JLabel("X"), noutputs_const);
 		noutputs_const.gridx=1; noutputs.add(zx, noutputs_const);
-		noutputs_const.gridx=2; noutputs.add(ztx, noutputs_const);
-		noutputs_const.gridx=3; noutputs.add(mx, noutputs_const);
-		noutputs_const.gridx=4; noutputs.add(mtx, noutputs_const);
+		noutputs_const.gridx=2; noutputs.add(mx, noutputs_const);
+		noutputs_const.gridx=3; noutputs.add(mtx, noutputs_const);
 		noutputs_const.gridx=0; noutputs_const.gridy=2; noutputs.add(new JLabel("Y"), noutputs_const);
 		noutputs_const.gridx=1; noutputs.add(zy, noutputs_const);
-		noutputs_const.gridx=2; noutputs.add(zty, noutputs_const);
-		noutputs_const.gridx=3; noutputs.add(my, noutputs_const);
-		noutputs_const.gridx=4; noutputs.add(mty, noutputs_const);
+		noutputs_const.gridx=2; noutputs.add(my, noutputs_const);
+		noutputs_const.gridx=3; noutputs.add(mty, noutputs_const);
 		
 			// pack components into the IO panel
 		JPanel numberystuff = new JPanel(new GridBagLayout());
@@ -136,5 +131,12 @@ public class GUI extends JFrame implements ActionListener {
 		plotwindow.removeAllPlots();
 		plotwindow.addLinePlot("X", vals[0], vals[1]);
 		plotwindow.addLinePlot("Y", vals[2], vals[3]);
+	}
+	
+	public void updateOutData(double[] vals) {
+		zx.setText(String.valueOf(vals[0]));
+		mx.setText(String.valueOf(vals[1])); mtx.setText(String.valueOf(vals[2]));
+		zy.setText(String.valueOf(vals[3]));
+		my.setText(String.valueOf(vals[4])); mty.setText(String.valueOf(vals[5]));
 	}
 }

@@ -16,14 +16,40 @@ public class Backend {
 		// plot the function
 	public static void plot(String[] strvalues) {
 		double[] values = parseNumbers(strvalues);
-		double[] zeroes = getZeroes(values);
-		double maxzero = max(zeroes);
-			// test if there was no x-intercept
-		if(maxzero != maxzero) {
+		double[][] zeroes = getZeroes(values);
+		double xzero = max(zeroes[0]); double yzero = max(zeroes[1]); double maxzero;
+			// test the two zeros, find the larger one or state that they're both nonexistant
+		if(xzero > yzero && xzero == xzero) {
+			maxzero = xzero;
+		} else if(yzero == yzero) {
+			maxzero = yzero;
+		} else {
 			MainWindow.updateStatus(false, "No X-Intercept!");
 			return;
 		}
-		MainWindow.updatePlot(generateTables(values, maxzero));
+		double[][] tables = generateTables(values, maxzero);
+		MainWindow.updatePlot(tables);
+		
+			// update zero and max data - vals[zx,mx,mtx,zy,my,mty]
+			// try-catch blocks are in case one zero doesn't exist
+		int xmaxindex = maxIndex(tables[1]); int ymaxindex = maxIndex(tables[3]);
+		double[] outputvals = new double[6];
+		try {
+			outputvals[0] = round(xzero, 3, RoundingMode.HALF_UP);
+		} catch(NumberFormatException e) {
+			MainWindow.updateStatus(true, "X Zero does not exist");
+		}
+		try {
+			outputvals[3] = round(yzero, 3, RoundingMode.HALF_UP);
+		} catch(NumberFormatException e) {
+			MainWindow.updateStatus(true, "Y Zero does not exist");
+		}
+		outputvals[1] = round(tables[1][xmaxindex], 3, RoundingMode.HALF_UP);
+		outputvals[2] = round(tables[0][xmaxindex], 3, RoundingMode.HALF_UP);
+		outputvals[4] = round(tables[3][ymaxindex], 3, RoundingMode.HALF_UP);
+		outputvals[5] = round(tables[2][ymaxindex], 3, RoundingMode.HALF_UP);
+		MainWindow.updateOutData(outputvals);
+		return;
 	}
 	
 		// parse input
@@ -45,12 +71,12 @@ public class Backend {
 	}
 		
 		// calculate the zeroes of the x and y functions
-	private static double[] getZeroes(double[] values) {
-		double[] zeroes = new double[4];
-		zeroes[0] = (-values[1]+Math.sqrt(Math.pow(values[1], 2)-4*values[0]*values[2]))/(2*values[0]);
-		zeroes[1] = (-values[1]-Math.sqrt(Math.pow(values[1], 2)-4*values[0]*values[2]))/(2*values[0]);
-		zeroes[2] = (-values[4]+Math.sqrt(Math.pow(values[4], 2)-4*values[3]*values[5]))/(2*values[3]);
-		zeroes[3] = (-values[4]-Math.sqrt(Math.pow(values[4], 2)-4*values[3]*values[5]))/(2*values[3]);
+	private static double[][] getZeroes(double[] values) {
+		double[][] zeroes = new double[2][2];
+		zeroes[0][0] = (-values[1]+Math.sqrt(Math.pow(values[1], 2)-4*values[0]*values[2]))/(2*values[0]);
+		zeroes[0][1] = (-values[1]-Math.sqrt(Math.pow(values[1], 2)-4*values[0]*values[2]))/(2*values[0]);
+		zeroes[1][0] = (-values[4]+Math.sqrt(Math.pow(values[4], 2)-4*values[3]*values[5]))/(2*values[3]);
+		zeroes[1][1] = (-values[4]-Math.sqrt(Math.pow(values[4], 2)-4*values[3]*values[5]))/(2*values[3]);
 		return zeroes;
 	}
 	
@@ -73,7 +99,7 @@ public class Backend {
 	}
 	
 		// custom rounding utility
-	private static double round(double value, int places, RoundingMode mode) {
+	private static double round(double value, int places, RoundingMode mode) throws NumberFormatException{
 	    if (places < 0) throw new IllegalArgumentException();
 	    BigDecimal bd = new BigDecimal(value);
 	    bd = bd.setScale(places, mode);
@@ -84,10 +110,18 @@ public class Backend {
 	private static double max(double[] input) {
 		double max = input[0];
 		for(int i = 1; i < input.length; i++) {
-			if(input[i] > max || input[i-1] != input[i-1]) {
+			if(input[i] > max|| input[i-1] != input[i-1]) {
 				max = input[i];
 			}
 		}
 		return max;
+	}
+	
+		// find index of maximum
+	private static int maxIndex(double[] input) {
+		double in_max = max(input);
+		int i;
+		for(i=0; input[i] != in_max; i++) {	}
+		return i;
 	}
 }
