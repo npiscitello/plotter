@@ -16,6 +16,8 @@ public class GUI extends JFrame implements ActionListener {
 	
 		// resources and dynamic values
 	private JButton plot = new JButton("plot");
+	private JRadioButton para = new JRadioButton("Parametric", true);
+	private JRadioButton cart = new JRadioButton("Cartesian");
 	private JTextField ax = new JTextField(4);
 	private JTextField vx = new JTextField(4);
 	private JTextField px = new JTextField(4);
@@ -31,8 +33,6 @@ public class GUI extends JFrame implements ActionListener {
 	private ImageIcon checkmark = new ImageIcon(getClass().getResource("checkmark-icon.png"));
 	private ImageIcon xmark = new ImageIcon(getClass().getResource("x-icon.png"));
 	private JLabel status = new JLabel();
-	
-		// plot panel
 	private Plot2DPanel plotwindow = new Plot2DPanel();
 	
 		// padding
@@ -44,6 +44,8 @@ public class GUI extends JFrame implements ActionListener {
 		
 			// set button action events
 		plot.setActionCommand("plot"); plot.addActionListener(this);
+		para.setActionCommand("para"); para.addActionListener(this);
+		cart.setActionCommand("cart"); cart.addActionListener(this);
 	
 			// numerical inputs
 		JPanel inputs = new JPanel(new GridBagLayout());
@@ -78,11 +80,20 @@ public class GUI extends JFrame implements ActionListener {
 		noutputs_const.gridx=2; noutputs.add(my, noutputs_const);
 		noutputs_const.gridx=3; noutputs.add(mty, noutputs_const);
 		
+			// selection buttons
+		ButtonGroup selection = new ButtonGroup();
+		selection.add(para); selection.add(cart);
+		JPanel buttons = new JPanel();
+		buttons.add(para); buttons.add(cart);
+		
+		
 			// pack components into the IO panel
 		JPanel numberystuff = new JPanel(new GridBagLayout());
 		GridBagConstraints numberystuff_const = new GridBagConstraints();
 		numberystuff_const.gridx=0; numberystuff_const.insets=spacing; numberystuff.add(inputs,numberystuff_const);
 		numberystuff_const.gridx=1; numberystuff.add(noutputs,numberystuff_const);
+		numberystuff_const.gridy=1; numberystuff_const.gridx=0; numberystuff_const.gridwidth=2;
+			numberystuff.add(buttons, numberystuff_const);
 		
 			// pack components into the status bar
 		JPanel status_bar = new JPanel(new GridBagLayout());
@@ -112,25 +123,37 @@ public class GUI extends JFrame implements ActionListener {
 		// respond to button presses
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand() == "plot") {
-			String[] values = {ax.getText(), vx.getText(), px.getText(), ay.getText(), vy.getText(), py.getText()};
-			Backend.plot(values);
+			Backend.plot();
+		} else if(e.getActionCommand() == "para") {
+			Backend.setParametric(true);
+		} else if(e.getActionCommand() == "cart") {
+			Backend.setParametric(false);
 		}
+	}
+	
+	public String[] getValues() {
+		String[] values = {ax.getText(), vx.getText(), px.getText(), ay.getText(), vy.getText(), py.getText()};
+		return values;
 	}
 	
 		// update the status bar
 	public void updateStatus(boolean check, String message)	{
 		status.setText(message);
-		if(check)	{
+		if(check) {
 			status.setIcon(checkmark);
-		}	else	{
+		} else {
 			status.setIcon(xmark);
 		}
 	}
 	
-	public void updatePlot(double[][] vals) {
+	public void updatePlot(double[][] vals, boolean parametric) {
 		plotwindow.removeAllPlots();
-		plotwindow.addLinePlot("X", vals[0], vals[1]);
-		plotwindow.addLinePlot("Y", vals[2], vals[3]);
+		if(parametric) {
+			plotwindow.addLinePlot("X Position", vals[0], vals[1]);
+			plotwindow.addLinePlot("Y Position", vals[2], vals[3]);
+		} else {
+			plotwindow.addLinePlot("Position", vals[1], vals[3]);
+		}
 	}
 	
 	public void updateOutData(double[] vals) {

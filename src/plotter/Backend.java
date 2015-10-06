@@ -7,30 +7,47 @@ import java.math.RoundingMode;
 
 public class Backend {
 
+		// define application window
 	static GUI MainWindow = new GUI("plotter", new Dimension(500,500), new Dimension(500,500));	
 	
+		// global variables
+	private static boolean para = true;
+	
+		// launch application window, initialize values
 	public static void main(String[] args) {
 		MainWindow.setVisible(true);
 		MainWindow.updateStatus(true, "Application Launch Successful!");
 		MainWindow.updateOutData(new double[6]);
 	}
 	
+		// change the plot mode
+	public static void setParametric(boolean selection) {
+		if(selection) {
+			para = true;
+		} else {
+			para = false;
+		}
+		plot();
+	}
+	
 		// plot the function
-	public static void plot(String[] strvalues) {
-		double[] values = parseNumbers(strvalues);
+	public static void plot() {
+		
+		double[] values = parseNumbers(MainWindow.getValues());
 		double[][] zeroes = getZeroes(values);
 		double xzero = max(zeroes[0]); double yzero = max(zeroes[1]); double maxzero;
-			// test the two zeros, find the larger one or state that they're both nonexistant
+			// test the two zeros, find the larger one or state that they're both nonexistent
 		if(xzero > yzero && xzero == xzero) {
 			maxzero = xzero;
 		} else if(yzero == yzero) {
 			maxzero = yzero;
 		} else {
-			MainWindow.updateStatus(false, "No X-Intercept!");
+			MainWindow.updateStatus(false, "No X-Intercepts!");
 			return;
 		}
 		double[][] tables = generateTables(values, maxzero);
-		MainWindow.updatePlot(tables);
+
+		MainWindow.updatePlot(tables, para);
 		
 			// update zero and max data - vals[zx,mx,mtx,zy,my,mty]
 			// try-catch blocks are in case one zero doesn't exist
