@@ -65,16 +65,27 @@ public class Backend {
 			// update zero and max data - vals[zx,mx,mtx,zy,my,mty]
 		int xmaxindex = maxIndex(tables[1]); int ymaxindex = maxIndex(tables[3]);
 		double[] outputvals = new double[6];
-		outputvals[0] = round(xzero, 3, "half");
-		outputvals[3] = round(yzero, 3, "half");
+		
 			// test if one or both zeroes doesn't exist
-		 if(outputvals[0] != outputvals[0] && outputvals[3] != outputvals[3]) {
-			MainWindow.updateStatus(true, "Zeroes do not exist");
-		} else if(outputvals[0] != outputvals[0]) {
-			MainWindow.updateStatus(true, "X Zero does not exist");
-		} else if(outputvals[3] != outputvals[3]) {
-			MainWindow.updateStatus(true, "Y Zero does not exist");
+		String statusmessage_zexist = "Both zeroes exist"; boolean xzerodne = false; boolean yzerodne = false;
+		try {
+			outputvals[0] = round(xzero, 3, "half");
 		}
+		catch(NumberFormatException e) { 
+			statusmessage_zexist = "X zero does not exist";
+			xzerodne = true;
+		}
+		try { 
+			outputvals[3] = round(yzero, 3, "half");
+		}
+		catch(NumberFormatException e) {
+			statusmessage_zexist = "Y zero does not exist";
+			yzerodne = true;
+		}
+		if(xzerodne && yzerodne) {
+			statusmessage_zexist = "Neither zero exist";
+		}
+		MainWindow.updateStatus(true, statusmessage_zexist);
 		outputvals[1] = round(tables[1][xmaxindex], 3, "half");
 		outputvals[2] = round(tables[0][xmaxindex], 3, "half");
 		outputvals[4] = round(tables[3][ymaxindex], 3,"half");
@@ -129,8 +140,8 @@ public class Backend {
 		return table;
 	}
 	
-		// custom rounding utility
-	private static double round(double value, int places, String mode) {
+		// custom rounding utility - throws an exception if answer doesn't exist
+	private static double round(double value, int places, String mode) throws NumberFormatException {
 		double roundadj = 0.5;
 		switch(mode) {
 		case "up":
@@ -143,7 +154,12 @@ public class Backend {
 			roundadj = 0.5;
 			break;
 		}
-		return (Math.floor((value*Math.pow(10,places))+roundadj)/Math.pow(10, places));
+		double rounded = Math.floor((value*Math.pow(10,places))+roundadj)/Math.pow(10, places);
+		if(rounded != rounded) {
+			throw new NumberFormatException();
+		} else {
+			return (rounded);
+		}
 	}
 	
 		// find maximum
