@@ -83,7 +83,7 @@ public class Backend {
 			yzerodne = true;
 		}
 		if(xzerodne && yzerodne) {
-			statusmessage_zexist = "Neither zero exist";
+			statusmessage_zexist = "Neither zero exists";
 		}
 		MainWindow.updateStatus(true, statusmessage_zexist);
 		outputvals[1] = round(tables[1][xmaxindex], 3, "half");
