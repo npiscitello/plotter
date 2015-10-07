@@ -6,7 +6,7 @@ import java.awt.Dimension;
 public class Backend {
 
 		// define application window
-	static GUI MainWindow = new GUI("plotter", new Dimension(550,500), new Dimension(550,500));	
+	static GUI MainWindow = new GUI("plotter", new Dimension(600,600), new Dimension(600,600));	
 	
 		// global variables
 	private static boolean para = true;
