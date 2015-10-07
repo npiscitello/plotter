@@ -43,18 +43,22 @@ public class Backend {
 		double[][] zeroes = getZeroes(values);
 		double xzero = max(zeroes[0]); double yzero = max(zeroes[1]); double maxzero = 0;
 			// test the two zeros, find the larger one or state that they're both nonexistent
-		if(xzero > yzero && xzero == xzero && xzero > 0) {
-			maxzero = xzero;
-		} else if(yzero == yzero && yzero > 0) {
-			maxzero = yzero;
-		} else {
-			try {
-				maxzero = parse(MainWindow.getXMax());
-			} catch(NumberFormatException e) {
-				MainWindow.updateStatus(false, "Check your X Max - is it a number?");
+		try {
+			maxzero = parse(MainWindow.getXMax());
+			if(maxzero <= 0) {
+				throw new NumberFormatException();
+			}
+		} catch(NumberFormatException e) {
+			if(xzero > yzero && xzero == xzero && xzero > 0) {
+				maxzero = xzero;
+			} else if(yzero == yzero && yzero > 0) {
+				maxzero = yzero;
+			} else {
+				MainWindow.updateStatus(false, "Check your X Max - is it a positive number?");
 				MainWindow.clearPlot();
 				return;
 			}
+
 		}
 		double[][] tables = generateTables(values, maxzero);
 

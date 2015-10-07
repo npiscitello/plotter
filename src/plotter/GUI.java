@@ -69,7 +69,7 @@ public class GUI extends JFrame implements ActionListener {
 		JPanel xmaxpanel = new JPanel();
 		xmaxpanel.setLayout(new BoxLayout(xmaxpanel, BoxLayout.PAGE_AXIS));
 		JLabel max = new JLabel("Max X:");
-		max.setToolTipText("Used when there are no positive x-intercepts");
+		max.setToolTipText("Used when there are no positive x-intercepts; must be positive. Overrides auto-generated zeroes.");
 		xmaxpanel.add(max);
 		xmaxpanel.add(xmax);
 	
