@@ -2,8 +2,6 @@
 package plotter;
 
 import java.awt.Dimension;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 public class Backend {
 
@@ -65,26 +63,22 @@ public class Backend {
 		MainWindow.updatePlot(tables, para);
 		
 			// update zero and max data - vals[zx,mx,mtx,zy,my,mty]
-			// try-catch blocks are in case one zero doesn't exist
 		int xmaxindex = maxIndex(tables[1]); int ymaxindex = maxIndex(tables[3]);
 		double[] outputvals = new double[6];
-		try {
-			outputvals[0] = round(xzero, 3, RoundingMode.HALF_UP);
-		} catch(NumberFormatException e) {
+		outputvals[0] = round(xzero, 3, "half");
+		outputvals[3] = round(yzero, 3, "half");
+			// test if one or both zeroes doesn't exist
+		 if(outputvals[0] != outputvals[0] && outputvals[3] != outputvals[3]) {
+			MainWindow.updateStatus(true, "Zeroes do not exist");
+		} else if(outputvals[0] != outputvals[0]) {
 			MainWindow.updateStatus(true, "X Zero does not exist");
-		}
-		try {
-			outputvals[3] = round(yzero, 3, RoundingMode.HALF_UP);
-		} catch(NumberFormatException e) {
+		} else if(outputvals[3] != outputvals[3]) {
 			MainWindow.updateStatus(true, "Y Zero does not exist");
 		}
-		if(outputvals[0] == 0 && outputvals[3] == 0) {
-			MainWindow.updateStatus(true, "Zeroes do not exist");
-		}
-		outputvals[1] = round(tables[1][xmaxindex], 3, RoundingMode.HALF_UP);
-		outputvals[2] = round(tables[0][xmaxindex], 3, RoundingMode.HALF_UP);
-		outputvals[4] = round(tables[3][ymaxindex], 3, RoundingMode.HALF_UP);
-		outputvals[5] = round(tables[2][ymaxindex], 3, RoundingMode.HALF_UP);
+		outputvals[1] = round(tables[1][xmaxindex], 3, "half");
+		outputvals[2] = round(tables[0][xmaxindex], 3, "half");
+		outputvals[4] = round(tables[3][ymaxindex], 3,"half");
+		outputvals[5] = round(tables[2][ymaxindex], 3, "half");
 		MainWindow.updateOutData(outputvals);
 		return;
 	}
@@ -121,25 +115,35 @@ public class Backend {
 			// find the magnitude, interval for table calculation, and maximum x
 		double magnitude = Math.pow(10, Math.floor(Math.log10(maxzero)));
 		double interval = magnitude/100;
-		double max = magnitude*(round(maxzero/magnitude, 2, RoundingMode.UP));
+		double max = magnitude*(round(maxzero/magnitude, 2, "half"));
 			// calculate tables
-		int j = 0;
-		double[][] table = new double[4][(int)round(max/interval, 0, RoundingMode.UP)+1];
-		for(double i = 0; i < max; i += interval) {
-			table[0][j] = i; table[2][j] = i;
-			table[1][j] = values[0]*Math.pow(i,2)+values[1]*i+values[2];
-			table[3][j] = values[3]*Math.pow(i,2)+values[4]*i+values[5];
-			j++;
+		int i = 0; int roundvalue = (int)-(Math.log10(magnitude)-2);
+		double[][] table = new double[4][(int)round(max/interval, 0,"up")];
+		while(i < table[0].length) {
+			double x = round(i*interval, roundvalue, "half");
+			table[0][i] = x; table[2][i] = x;
+			table[1][i] = round(values[0]*Math.pow(x,2)+values[1]*x+values[2], roundvalue, "half");
+			table[3][i] = round(values[3]*Math.pow(x,2)+values[4]*x+values[5], roundvalue, "half");
+			i++;
 		}
 		return table;
 	}
 	
 		// custom rounding utility
-	private static double round(double value, int places, RoundingMode mode) throws NumberFormatException{
-	    if (places < 0) throw new IllegalArgumentException();
-	    BigDecimal bd = new BigDecimal(value);
-	    bd = bd.setScale(places, mode);
-	    return bd.doubleValue();
+	private static double round(double value, int places, String mode) {
+		double roundadj = 0.5;
+		switch(mode) {
+		case "up":
+			roundadj = 1;
+			break;
+		case "down":
+			roundadj = 0;
+			break;
+		case "half":
+			roundadj = 0.5;
+			break;
+		}
+		return (Math.floor((value*Math.pow(10,places))+roundadj)/Math.pow(10, places));
 	}
 	
 		// find maximum
