@@ -8,7 +8,7 @@ import java.math.RoundingMode;
 public class Backend {
 
 		// define application window
-	static GUI MainWindow = new GUI("plotter", new Dimension(500,500), new Dimension(500,500));	
+	static GUI MainWindow = new GUI("plotter", new Dimension(550,500), new Dimension(550,500));	
 	
 		// global variables
 	private static boolean para = true;
@@ -32,18 +32,27 @@ public class Backend {
 	
 		// plot the function
 	public static void plot() {
-		
-		double[] values = parseNumbers(MainWindow.getValues());
+		double[] values = new double[6];
+		try {
+			values = parse(MainWindow.getValues());
+		} catch(NumberFormatException e) {
+			MainWindow.updateStatus(false, "Check your inputs - are they all numbers?");
+			return;
+		}
 		double[][] zeroes = getZeroes(values);
-		double xzero = max(zeroes[0]); double yzero = max(zeroes[1]); double maxzero;
+		double xzero = max(zeroes[0]); double yzero = max(zeroes[1]); double maxzero = 0;
 			// test the two zeros, find the larger one or state that they're both nonexistent
-		if(xzero > yzero && xzero == xzero) {
+		if(xzero > yzero && xzero == xzero && xzero > 0) {
 			maxzero = xzero;
-		} else if(yzero == yzero) {
+		} else if(yzero == yzero && yzero > 0) {
 			maxzero = yzero;
 		} else {
-			MainWindow.updateStatus(false, "No X-Intercepts!");
-			return;
+			try {
+				maxzero = parse(MainWindow.getXMax());
+			} catch(NumberFormatException e) {
+				MainWindow.updateStatus(false, "Check your X Max - is it a number?");
+				return;
+			}
 		}
 		double[][] tables = generateTables(values, maxzero);
 
@@ -63,6 +72,9 @@ public class Backend {
 		} catch(NumberFormatException e) {
 			MainWindow.updateStatus(true, "Y Zero does not exist");
 		}
+		if(outputvals[0] == 0 && outputvals[3] == 0) {
+			MainWindow.updateStatus(true, "Zeroes do not exist");
+		}
 		outputvals[1] = round(tables[1][xmaxindex], 3, RoundingMode.HALF_UP);
 		outputvals[2] = round(tables[0][xmaxindex], 3, RoundingMode.HALF_UP);
 		outputvals[4] = round(tables[3][ymaxindex], 3, RoundingMode.HALF_UP);
@@ -71,22 +83,21 @@ public class Backend {
 		return;
 	}
 	
-		// parse input
-	private static double[] parseNumbers(String[] strvalues) {
+		// parse input list
+	private static double[] parse(String[] strvalues) throws NumberFormatException{
 		double[] dubvals = new double[6];
-		try {
 			// try to convert the inputs to numbers
-			for(int i = 0; i < dubvals.length; i++) {
-				dubvals[i] = Double.parseDouble(strvalues[i]);
-				if(i == 0 || i == 3) {
-					dubvals[i] /= 2;
-				}
-			}			
-			MainWindow.updateStatus(true, "Equation updated successfully");
-		} catch(NumberFormatException e) {
-			MainWindow.updateStatus(false, "Check your inputs - are they all numbers?");
+		for(int i = 0; i < dubvals.length; i++) {
+			dubvals[i] = Double.parseDouble(strvalues[i]);
+			if(i == 0 || i == 3) {
+				dubvals[i] /= 2;
+			}		
 		}
 		return dubvals;
+	}
+		// parse xmax input
+	private static double parse(String value) throws NumberFormatException {
+		return Double.parseDouble(value);
 	}
 		
 		// calculate the zeroes of the x and y functions
@@ -107,8 +118,8 @@ public class Backend {
 		double max = magnitude*(round(maxzero/magnitude, 2, RoundingMode.UP));
 			// calculate tables
 		int j = 0;
-		double[][] table = new double[4][(int)round(max/interval, 0, RoundingMode.HALF_UP)];
-		for(double i = 0; i < maxzero; i += interval) {
+		double[][] table = new double[4][(int)round(max/interval, 0, RoundingMode.UP)+1];
+		for(double i = 0; i < max; i += interval) {
 			table[0][j] = i; table[2][j] = i;
 			table[1][j] = values[0]*Math.pow(i,2)+values[1]*i+values[2];
 			table[3][j] = values[3]*Math.pow(i,2)+values[4]*i+values[5];

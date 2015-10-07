@@ -18,12 +18,13 @@ public class GUI extends JFrame implements ActionListener {
 	private JButton plot = new JButton("plot");
 	private JRadioButton para = new JRadioButton("Parametric", true);
 	private JRadioButton cart = new JRadioButton("Cartesian");
-	private JTextField ax = new JTextField(4);
-	private JTextField vx = new JTextField(4);
-	private JTextField px = new JTextField(4);
-	private JTextField ay = new JTextField(4);
-	private JTextField vy = new JTextField(4);
-	private JTextField py = new JTextField(4);
+	private JTextField ax = new JTextField(3);
+	private JTextField vx = new JTextField(3);
+	private JTextField px = new JTextField(3);
+	private JTextField ay = new JTextField(3);
+	private JTextField vy = new JTextField(3);
+	private JTextField py = new JTextField(3);
+	private JTextField xmax = new JTextField(3);
 	private JLabel zx = new JLabel();
 	private JLabel mx = new JLabel();
 	private JLabel mtx = new JLabel();
@@ -63,6 +64,14 @@ public class GUI extends JFrame implements ActionListener {
 		input_const.gridx=2; inputs.add(vy,input_const);
 		input_const.gridx=3; inputs.add(py,input_const);
 		input_const.gridx=4; input_const.gridy=1; input_const.gridheight=2; inputs.add(plot,input_const);
+		
+			// x max selection
+		JPanel xmaxpanel = new JPanel();
+		xmaxpanel.setLayout(new BoxLayout(xmaxpanel, BoxLayout.PAGE_AXIS));
+		JLabel max = new JLabel("Max X:");
+		max.setToolTipText("Used when there are no positive x-intercepts");
+		xmaxpanel.add(max);
+		xmaxpanel.add(xmax);
 	
 			// numerical outputs
 		JPanel noutputs = new JPanel(new GridBagLayout());
@@ -91,8 +100,9 @@ public class GUI extends JFrame implements ActionListener {
 		JPanel numberystuff = new JPanel(new GridBagLayout());
 		GridBagConstraints numberystuff_const = new GridBagConstraints();
 		numberystuff_const.gridx=0; numberystuff_const.insets=spacing; numberystuff.add(inputs,numberystuff_const);
-		numberystuff_const.gridx=1; numberystuff.add(noutputs,numberystuff_const);
-		numberystuff_const.gridy=1; numberystuff_const.gridx=0; numberystuff_const.gridwidth=2;
+		numberystuff_const.gridx=1; numberystuff_const.insets=spacing; numberystuff.add(xmaxpanel, numberystuff_const);
+		numberystuff_const.gridx=2; numberystuff.add(noutputs,numberystuff_const);
+		numberystuff_const.gridy=1; numberystuff_const.gridx=0; numberystuff_const.gridwidth=3;
 			numberystuff.add(buttons, numberystuff_const);
 		
 			// pack components into the status bar
@@ -134,6 +144,10 @@ public class GUI extends JFrame implements ActionListener {
 	public String[] getValues() {
 		String[] values = {ax.getText(), vx.getText(), px.getText(), ay.getText(), vy.getText(), py.getText()};
 		return values;
+	}
+	
+	public String getXMax() {
+		return xmax.getText();
 	}
 	
 		// update the status bar
