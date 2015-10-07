@@ -37,6 +37,7 @@ public class Backend {
 			values = parse(MainWindow.getValues());
 		} catch(NumberFormatException e) {
 			MainWindow.updateStatus(false, "Check your inputs - are they all numbers?");
+			MainWindow.clearPlot();
 			return;
 		}
 		double[][] zeroes = getZeroes(values);
@@ -51,6 +52,7 @@ public class Backend {
 				maxzero = parse(MainWindow.getXMax());
 			} catch(NumberFormatException e) {
 				MainWindow.updateStatus(false, "Check your X Max - is it a number?");
+				MainWindow.clearPlot();
 				return;
 			}
 		}

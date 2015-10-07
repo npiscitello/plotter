@@ -170,6 +170,10 @@ public class GUI extends JFrame implements ActionListener {
 		}
 	}
 	
+	public void clearPlot() {
+		plotwindow.removeAllPlots();
+	}
+	
 	public void updateOutData(double[] vals) {
 		zx.setText(String.valueOf(vals[0]));
 		mx.setText(String.valueOf(vals[1])); mtx.setText(String.valueOf(vals[2]));
