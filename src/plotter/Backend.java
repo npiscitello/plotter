@@ -1,4 +1,3 @@
-// make the doubles look nicer; round!
 package plotter;
 
 import java.awt.Dimension;
