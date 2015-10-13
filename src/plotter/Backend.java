@@ -19,17 +19,14 @@ public class Backend {
 	
 		// change the plot mode
 	public static void setParametric(boolean selection) {
-		if(selection) {
-			para = true;
-		} else {
-			para = false;
-		}
+		para = selection;
 		plot();
 	}
 	
 		// plot the function
 	public static void plot() {
 		double[] values = new double[6];
+			// try to parse values, return error status if it doesn't work
 		try {
 			values = parse(MainWindow.getValues());
 		} catch(NumberFormatException e) {
@@ -37,6 +34,7 @@ public class Backend {
 			MainWindow.clearPlot();
 			return;
 		}
+			// calculate and sort zeroes
 		double[][] zeroes = getZeroes(values);
 		double xzero = max(zeroes[0]); double yzero = max(zeroes[1]); double maxzero = 0;
 			// test the two zeros, find the larger one or state that they're both nonexistent
@@ -85,6 +83,7 @@ public class Backend {
 			statusmessage_zexist = "Neither zero exists";
 		}
 		MainWindow.updateStatus(true, statusmessage_zexist);
+			// make the data look good and output it
 		outputvals[1] = round(tables[1][xmaxindex], 3, "half");
 		outputvals[2] = round(tables[0][xmaxindex], 3, "half");
 		outputvals[4] = round(tables[3][ymaxindex], 3,"half");
@@ -110,7 +109,7 @@ public class Backend {
 		return Double.parseDouble(value);
 	}
 		
-		// calculate the zeroes of the x and y functions
+		// calculate the zeroes of the x and y functions with the quadratic equation
 	private static double[][] getZeroes(double[] values) {
 		double[][] zeroes = new double[2][2];
 		zeroes[0][0] = (-values[1]+Math.sqrt(Math.pow(values[1], 2)-4*values[0]*values[2]))/(2*values[0]);
@@ -141,6 +140,7 @@ public class Backend {
 	
 		// custom rounding utility - throws an exception if answer doesn't exist
 	private static double round(double value, int places, String mode) throws NumberFormatException {
+			// default to half
 		double roundadj = 0.5;
 		switch(mode) {
 		case "up":
