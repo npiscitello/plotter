@@ -37,9 +37,9 @@ public class GUI extends JFrame implements ActionListener {
 	private Plot2DPanel plotwindow = new Plot2DPanel();
 	
 		// padding
-	Insets pad = new Insets(2,2,2,2);
-	Insets spacing = new Insets(0,20,0,20);
-	Dimension vertspace = new Dimension(0,10);
+	private Insets pad = new Insets(2,2,2,2);
+	private Insets spacing = new Insets(0,20,0,20);
+	private Dimension vertspace = new Dimension(0,10);
 
 	public GUI(String name, Dimension size, Dimension minsize) {
 		
@@ -51,7 +51,6 @@ public class GUI extends JFrame implements ActionListener {
 			// numerical inputs
 		JPanel inputs = new JPanel(new GridBagLayout());
 		GridBagConstraints input_const = new GridBagConstraints();
-		input_const.gridx=0; input_const.gridy=0; inputs.add(new JLabel("INPUTS"),input_const);
 		input_const.gridx=1; inputs.add(new JLabel("Accel"));
 		input_const.gridx=2; inputs.add(new JLabel("Velo"));
 		input_const.gridx=3; inputs.add(new JLabel("Pos"));
